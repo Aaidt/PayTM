@@ -3,6 +3,7 @@ import { z } from "zod";
 import { UserModel } from "../db/db"
 import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
+import { authMiddleware } from "../middlewares/authMiddleware"
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET;
