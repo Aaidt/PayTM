@@ -3,7 +3,6 @@ import rootRouter from "./routes/root"
 import cors from "cors" 
 
 const PORT = process.env.PORT;
-const JWT_SECRET = process.env.JWT_SECRET;
 
 const router = express.Router();
 const app = express()
