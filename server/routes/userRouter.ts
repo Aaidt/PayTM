@@ -9,7 +9,7 @@ const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET;
 
 
-const signupBody = z.object({
+const authBody = z.object({
     username: z.string().email().endsWith("@gmail.com"),
     password: z.string(),
     firstname: z.string().min(3).max(30),
@@ -17,9 +17,10 @@ const signupBody = z.object({
 })
 
 
-router.post("/signup", async (req: Request, res: Response) => {
+router.post("/signup", authMiddleware, async (req: Request, res: Response) => {
     const { username, password, firstname, lastname } = req.body
-    const parse = signupBody.safeParse(req.body);
+    const parse = authBody.safeParse(req.body);
+    const userId = req.userId
 
     const saltRounds = 6;
 
@@ -50,8 +51,6 @@ router.post("/signup", async (req: Request, res: Response) => {
             lastname
         });
 
-        const userId = user._id
-
         const token = jwt.sign({
             userId
         }, JWT_SECRET, { expiresIn: "1hr" })
@@ -67,9 +66,10 @@ router.post("/signup", async (req: Request, res: Response) => {
 })
 
 
-router.post("/signin", async (req: Request, res: Response) => {
+router.post("/signin", authMiddleware, async (req: Request, res: Response) => {
     const { username, password, firstname, lastname } = req.body
-    const parse = signupBody.safeParse(req.body);
+    const parse = authBody.safeParse(req.body);
+    const userId = req.userId
 
     if (!JWT_SECRET) {
         console.log("JWT secret not provided.");
@@ -99,7 +99,6 @@ router.post("/signin", async (req: Request, res: Response) => {
             res.status(401).json({ message: "Invalid credentials." })
         }
 
-        const userId = user?._id
         const token = jwt.sign({
             userId
         }, JWT_SECRET, { expiresIn: "1hr" })
@@ -110,6 +109,49 @@ router.post("/signin", async (req: Request, res: Response) => {
         })
     } catch (err) {
         res.status(500).json({ Error: "Internal server error" + err })
+        console.log(err)
+    }
+})
+
+const updateBody = z.object({
+    password: z.string().optional(),
+    firstname: z.string().min(3).max(30).optional(),
+    lastname: z.string().min(3).max(30).optional()
+})
+
+router.put("/", authMiddleware, async (req: Request, res: Response) => {
+    const { password, firstname, lastname } = req.body;
+    const { success } = updateBody.safeParse(req.body);
+
+    if (!success) {
+        res.status(411).json({ message: "Invalid input provided." })
+        return
+    }
+
+    const updateData: any = {}
+
+    if (password) {
+        updateData.password = await bcrypt.hash(password, 6);
+    }
+    if (firstname) {
+        updateData.firstname = firstname
+    }
+    if (lastname) {
+        updateData.lastname = lastname
+    }
+
+    try {
+        const update = await UserModel.findOneAndUpdate({
+            userId: req.userId
+        }, updateData)
+        res.status(200).json({ message: "User updated successfully!!!" })
+
+        if (!update) {
+            res.status(411).json({ message: "User not found." })
+            return
+        }
+    } catch (err) {
+        res.status(500).json({ message: "Internal server error" + err })
         console.log(err)
     }
 })

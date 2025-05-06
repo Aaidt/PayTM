@@ -1,5 +1,4 @@
 import jwt from "jsonwebtoken";
-import { ObjectId } from "mongoose"
 import { Request, Response, NextFunction } from "express"
 
 const JWT_SECRET = process.env.JWT_SECRET;
