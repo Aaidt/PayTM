@@ -26,12 +26,14 @@ const UserSchema = new Schema({
         type: String,
         required: true,
         trim: true,
+        lowercase: true,
         maxLength: 50
     },
     lastname: { 
         type: String, 
         required: true,
         trim: true,
+        lowercase: true,
         maxLength: 50 
     },
     password: {
