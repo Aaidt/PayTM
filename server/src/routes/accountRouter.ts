@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express"
 import { authMiddleware } from "../middlewares/authMiddleware"
 import { AccountModel } from "../db/db"
+import mongoose from "mongoose"
 const router = express.Router();
 
 router.get("/balance", authMiddleware, async (req: Request, res: Response) => {
@@ -20,28 +21,30 @@ router.get("/balance", authMiddleware, async (req: Request, res: Response) => {
 })
 
 router.post("/transfer", authMiddleware, async (req: Request, res: Response) => {
+    const session = await mongoose.startSession();
+
+    session.startTransaction();
     const { to, amount } = req.body;
 
     try {
         const account = await AccountModel.findOne({
             userId: req.userId
-        });
+        }).session(session);
 
-        if (!account?.balance) {
-            console.log("No balance.")
-            return
-        }
-
-        if (account?.balance < amount) {
+        if (!account || account?.balance < amount) {
+            await session.abortTransaction()
             res.status(400).json({ message: "Insufficient balance" })
             return
         }
 
         const toAccount = await AccountModel.findOne({
             userId: to
-        });
+        }).session(session);
+
         if (!toAccount) {
+            session.abortTransaction()
             res.status(400).json({ message: "Invalid account" });
+            return 
         }
 
         await AccountModel.findOne({
@@ -50,7 +53,7 @@ router.post("/transfer", authMiddleware, async (req: Request, res: Response) => 
             $inc: {
                 balance: -amount
             }
-        })
+        }).session(session);
 
         await AccountModel.findOne({
             userId: to
@@ -58,7 +61,9 @@ router.post("/transfer", authMiddleware, async (req: Request, res: Response) => 
             $inc: {
                 balance: amount
             }
-        })
+        }).session(session);
+
+        await session.commitTransaction()
 
         res.status(200).json({ message: "Transaction successfull" });
 
