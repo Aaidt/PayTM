@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import { z } from "zod";
-import { UserModel } from "../db/db"
+import { UserModel, AccountModel } from "../db/db"
 import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
 import { authMiddleware } from "../middlewares/authMiddleware"
@@ -60,6 +60,14 @@ router.post("/signup", async (req: Request, res: Response) => {
             message: "You have successfully signed up!!!",
             token
         })
+
+        // seed some money as balance in the account.
+        await AccountModel.create({
+            userId,
+            balance: Math.random()*10000
+        });
+
+
     } catch (err) {
         res.status(500).json({ Error: "Internal server error" + err })
         console.log(err)
