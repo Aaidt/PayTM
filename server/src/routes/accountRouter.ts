@@ -5,10 +5,10 @@ const router = express.Router();
 
 router.get("/balance", authMiddleware, async (req: Request, res: Response) => {
     try {
-        const user = await AccountModel.findOne({
+        const account = await AccountModel.findOne({
             userId: req.userId
         }).populate("userId");
-        const balance = user?.balance
+        const balance = account?.balance
 
         res.status(200).json({ balance })
 
