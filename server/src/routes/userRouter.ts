@@ -157,25 +157,37 @@ router.put("/", authMiddleware, async (req: Request, res: Response) => {
     }
 })
 
-router.get("/bulk:filter", authMiddleware, async (req: Request, res: Response) => {
-    const { filter } = req.params;
+router.get("/bulk", authMiddleware, async (req: Request, res: Response) => {
+    const filter = req.query.filter || ""
 
     try {
-        const foundUser = await UserModel.findOne({
-            username: filter
-        });
+        const users = await UserModel.find({
+            $or: [{
+                firstname: {
+                    $regex: filter
+                }
+            }, {
+                lastname: {
+                    $regex: filter
+                }
+            }]
+        })
+        if (!users) {
+            res.status(403).json({ message: "No users match that filter." })
+            return
+        }
 
         res.status(200).json({
-            foundUser
-        });
-
-        if (!foundUser) {
-            res.status(403).json({ message: "User not found." })
-            return 
-        }
+            user: users.map(u => ({
+                username: u.username,
+                firstname: u.firstname,
+                lastname: u.lastname,
+                _id: u._id
+            }))
+        })
     } catch (err) {
         console.log("Error" + err);
-        res.status(500).json({ message: "Iternal server error" + err })
+        res.status(500).json({ message: "Internal server error" + err })
     }
 
 })
