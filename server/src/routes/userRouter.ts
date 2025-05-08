@@ -136,16 +136,18 @@ const updateBody = z.object({
 router.get("/info", authMiddleware, async (req: Request, res: Response) => {
     try {
         const user = await UserModel.findOne({ _id: req.userId })
+        const account = await AccountModel.findOne({ userId: req.userId })
 
-        if (!user) {
-            res.status(403).json({ message: "No user found." })
+        if (!user || !account) {
+            res.status(403).json({ message: "No results found." })
             return
         }
 
         res.status(200).json({
             username: user.username,
             firstname: user.firstname,
-            lastname: user.lastname
+            lastname: user.lastname,
+            balance: account.balance
         })
     } catch (err) {
         res.status(500).json({ message: "Internal server error " + err })
@@ -224,5 +226,7 @@ router.get("/bulk", authMiddleware, async (req: Request, res: Response) => {
     }
 
 })
+
+
 
 export default router
