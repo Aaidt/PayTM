@@ -133,6 +133,22 @@ const updateBody = z.object({
     lastname: z.string().min(3).max(30).optional()
 })
 
+router.get("/info", authMiddleware, async (req: Request, res: Response) => {
+    try {
+        const data = await UserModel.findOne({ userId: req.userId })
+
+        if(!data){
+            res.status(403).json({ message: "No user found." })
+            return
+        }
+
+        res.status(200).json({ data })
+    } catch (err) {
+        res.status(500).json({ message: "Internal server error" + err })
+        console.log(err)
+    }
+})
+
 router.put("/", authMiddleware, async (req: Request, res: Response) => {
     const { password, firstname, lastname } = req.body;
     const { success } = updateBody.safeParse(req.body);
