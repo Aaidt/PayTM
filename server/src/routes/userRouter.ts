@@ -227,6 +227,21 @@ router.get("/bulk", authMiddleware, async (req: Request, res: Response) => {
 
 })
 
+router.get("/allUsers", authMiddleware, async (req: Request, res: Response) => {
+    try {
+        const users = await UserModel.find().select("-password")
+        
+        if (!users) {
+            res.status(404).json({ message: "There are no users" })
+            return
+        }
 
+        res.status(200).json({ users })
+    } catch (err) {
+        res.status(500).json({ message: "Internal server error " + err })
+        console.log(err)
+    }
+
+})
 
 export default router
