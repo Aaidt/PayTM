@@ -21,7 +21,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
     const token = authHeader.split(' ')[1];
 
     try {
-        const decoded = jwt.verify(token, JWT_SECRET) as { userId: string}
+        const decoded = jwt.verify(token, JWT_SECRET) as { userId: string }
 
         req.userId = decoded.userId;
 
