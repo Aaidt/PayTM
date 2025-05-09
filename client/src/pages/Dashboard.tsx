@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { UserIcon } from "../components/icons/UserIcon"
 import { Users } from "../components/ui/Users"
+import { Navbar } from "../components/ui/Navbar"
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
 const token = localStorage.getItem("Authorization");
@@ -74,15 +74,7 @@ export const Dashboard = () => {
 
     return <div className="min-h-screen">
 
-        <div className="flex justify-between shadow-black/10 pb-3 shadow-sm">
-            <h2 className="font-bold text-3xl pt-5 pl-7">PayTM</h2>
-            <div className="flex items-center pt-5 pr-7 ">
-                <p className="text-xl font-semibold pr-2">Hello, {user}</p>
-                <div className="bg-gray-300 rounded-full p-2 ">
-                    <UserIcon />
-                </div>
-            </div>
-        </div>
+        <Navbar user={user} />
 
         <div className="p-10 flex text-xl">
             <div className="font-semibold" >Your balance: </div>
