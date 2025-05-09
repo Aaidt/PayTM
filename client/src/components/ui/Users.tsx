@@ -19,7 +19,7 @@ export const Users = ({
             <div className="font-light text-gray-500">{email}</div>
         </div>
         <button
-            className="rounded-md bg-green-600 text-white px-4"
+            className="rounded-md bg-green-600 text-white px-4 font-medium"
             onClick={() => setOpen(true)}>
             Send money
         </button>

@@ -40,7 +40,7 @@ export const Signup = () => {
     }
 
     return (
-        <div className="bg-gray-700/70 min-h-screen">
+        <div className="bg-gray-500/50 min-h-screen">
             <div className="flex justify-center items-center container">
                 <div className="p-6 bg-white h-120 w-82 rounded-md mt-15 ml-20 shadow-lg shadow-black/60">
                     <div className="flex flex-col justify-center items-center">
@@ -97,7 +97,7 @@ export const Signup = () => {
 
                     <div className="pt-4">
                         <button onClick={() => handleSignup()}
-                            className="hover:-translate-y-1 duration-200 cursor-pointer bg-black rounded-md w-full text-white p-1 flex justify-center items-center">
+                            className="hover:bg-black/80 duration-300 cursor-pointer bg-black rounded-md w-full text-white p-1 flex justify-center items-center">
                             Sign Up
                         </button>
                     </div>
