@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Users } from "../components/ui/Users"
 import { Navbar } from "../components/ui/Navbar"
+import { SendModal } from "../components/ui/SendModal"
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
 const token = localStorage.getItem("Authorization");
@@ -14,7 +15,7 @@ interface ResponseData {
 
 interface User {
     _id: string,
-    usename: string,
+    username: string,
     firstname: string,
     lastname: string,
 }
@@ -27,6 +28,7 @@ export const Dashboard = () => {
     const [user, setUser] = useState("");
     const [balance, setBalance] = useState<number>(0);
     const [allUsers, setAllUsers] = useState<User[]>([]);
+    const [open, setOpen] = useState<boolean>(false)
 
     useEffect(() => {
         fetch(`${BACKEND_URL}/api/v1/user/info`, {
@@ -72,7 +74,10 @@ export const Dashboard = () => {
     }, [])
 
 
-    return <div className="min-h-screen">
+    return <div className="">
+        {open && (
+            <SendModal setOpen={setOpen} />
+        )}
 
         <Navbar user={user} />
 
@@ -87,10 +92,10 @@ export const Dashboard = () => {
         </div>
 
         <div className="flex flex-col p-10">
-            
+
             {allUsers?.map(u => (
                 <div key={u._id} className="text-lg">
-                    <Users firstname={u.firstname} />
+                    <Users firstname={u.firstname} email={u.username} open={open} setOpen={setOpen} />
                 </div>
             ))}
         </div>
