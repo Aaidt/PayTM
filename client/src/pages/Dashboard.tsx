@@ -95,7 +95,7 @@ export const Dashboard = () => {
 
             {allUsers?.map(u => (
                 <div key={u._id} className="text-lg">
-                    <Users firstname={u.firstname} email={u.username} open={open} setOpen={setOpen} />
+                    <Users firstname={u.firstname} email={u.username} setOpen={setOpen} />
                 </div>
             ))}
         </div>
