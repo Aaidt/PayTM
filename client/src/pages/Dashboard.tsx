@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Users } from "../components/ui/Users"
 import { Navbar } from "../components/ui/Navbar"
 import { SendModal } from "../components/ui/SendModal"
@@ -27,10 +27,14 @@ interface allUsers {
 export const Dashboard = () => {
     const [user, setUser] = useState("");
     const [balance, setBalance] = useState<number>(0);
-    const [allUsers, setAllUsers] = useState<User[]>([]);
     const [open, setOpen] = useState<boolean>(false)
+    const [filteredUsers, setFilteredUsers] = useState<User[]>([])
+    const [allUsers, setAllUsers] = useState<User[]>([])
+
+    const searchRef = useRef<HTMLInputElement>(null)
 
     useEffect(() => {
+
         fetch(`${BACKEND_URL}/api/v1/user/info`, {
             method: "GET",
             headers: {
@@ -51,6 +55,9 @@ export const Dashboard = () => {
                 console.log('Error fetching data: ' + error)
             )
 
+    }, [])
+
+    useEffect(() => {
 
         fetch(`${BACKEND_URL}/api/v1/user/allUsers`, {
             method: "GET",
@@ -65,14 +72,24 @@ export const Dashboard = () => {
                 return response.json() as Promise<allUsers>
             })
             .then((data: allUsers) => {
+                setFilteredUsers(data.users)
                 setAllUsers(data.users)
             })
             .catch(err => {
                 console.log(err)
             })
 
-    }, [])
+    }, [searchRef.current])
 
+
+    const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if(e.key === "Enter"){
+            const searchValue = searchRef.current?.value.toLowerCase() || "";
+            setFilteredUsers(allUsers.filter(u => {
+                return u.firstname.toLowerCase().includes(searchValue)
+            }))
+        }
+    }
 
     return <div className="">
         {open && (
@@ -82,18 +99,21 @@ export const Dashboard = () => {
         <Navbar user={user} />
 
         <div className="p-10 flex text-xl">
-            <div className="font-semibold" >Your balance: </div>
+            <div className="font-semibold pr-2" >Your balance: </div>
             <div className="">{balance.toFixed(2)}</div>
         </div>
 
         <div>
             <h2 className="text-2xl font-semibold pl-10">Users</h2>
-            <input placeholder="Search users..." className="w-300 ml-10 p-1 mt-4 border-1 border-gray-300 rounded-md hover:border-gray-500 duration-300"></input>
+            <input placeholder="Search users..."
+                className="w-300 ml-10 p-1 mt-4 border-1 border-gray-300 rounded-md hover:border-gray-500 duration-300"
+                ref={searchRef} 
+                onKeyDown={handleSearch}/>
         </div>
 
         <div className="flex flex-col p-10">
 
-            {allUsers?.map(u => (
+            {filteredUsers?.map(u => (
                 <div key={u._id} className="text-lg">
                     <Users firstname={u.firstname} email={u.username} setOpen={setOpen} />
                 </div>

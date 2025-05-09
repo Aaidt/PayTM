@@ -26,7 +26,7 @@ export const Navbar = ({ user }: { user: string }) => {
                             className="mt-2 border-1 border-black/60 rounded-md p-1 text-lg font-medium bg-red-700 hover:bg-red-600 
                             duration-300 text-white mr-5 cursor-pointer flex items-center justify-center"
                             onClick={() => localStorage.removeItem("Authorization")}>
-                            <div className="pr-1">
+                            <div className="">
                                 <LogoutIcon />
                             </div>
                             Logout
