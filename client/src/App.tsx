@@ -3,7 +3,6 @@ import { Signin } from "./components/ui/Signin"
 import { Signup } from "./components/ui/Signup"
 import { LandingPage } from "./pages/LandingPage"
 import { Dashboard } from "./pages/Dashboard"
-import { Transaction } from "./pages/Transaction"
 
 function App() {
   return (
@@ -13,7 +12,6 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/signin" element={<Signin />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/send" element={<Transaction />} />
       </Routes>
     </BrowserRouter>
   )

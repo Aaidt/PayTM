@@ -1,15 +1,16 @@
 import { UserIcon } from "../icons/UserIcon"
 import { LogoutIcon } from "../icons/LogoutIcon"
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 
 export const Navbar = ({ user }: { user: string }) => {
     const navigate = useNavigate()
     const [dropOpen, setDropOpen] = useState<boolean>(false)
 
     return <div>
-        <div className="flex justify-between pb-3">
-            <h2 className="font-bold text-blue-900 text-3xl pt-5 pl-7">PayTM</h2>
+        <div className={`flex justify-between ${dropOpen ? 'pb-4' : 'pb-3'} duration-200 shadow-sm shadow-black/10`}>
+            <h2 className="font-bold text-blue-900 text-3xl pt-5 pl-7 duration-200 cursor-pointer hover:text-shadow-md 
+            hover:text-shadow-black/20">PayTM</h2>
             <div className="flex pt-5 pr-7">
 
                 <div className="flex flex-col">

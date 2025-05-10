@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Navbar } from "../components/ui/Navbar"
 import { UserIcon } from "../components/icons/UserIcon"
 import { SendIcon } from "../components/icons/SendIcon"
+import { useNavigate } from "react-router-dom"
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
 const token = localStorage.getItem("Authorization");
@@ -31,6 +32,9 @@ export const Dashboard = () => {
     const [filteredUsers, setFilteredUsers] = useState<User[]>([])
     const [allUsers, setAllUsers] = useState<User[]>([])
     const [selectedUser, setSelectedUser] = useState<User>()
+    const amountRef = useRef<HTMLInputElement>(null)
+
+    const navigate = useNavigate();
 
     const searchRef = useRef<HTMLInputElement>(null)
 
@@ -92,6 +96,11 @@ export const Dashboard = () => {
         }
     }
 
+    const handleTransfer = async() => {
+        await axios.post(`${BACKEND_URL}/api/v1/`)
+    }
+
+
     return <div className="min-h-screen">
 
         <Navbar user={user} />
@@ -114,7 +123,7 @@ export const Dashboard = () => {
             {filteredUsers?.map(u => (
                 <div key={u._id} className="">
 
-                    <div className="flex justify-between p-4 hover:bg-gray-200 rounded-lg duration-200">
+                    <div className="flex justify-between p-4 hover:bg-gray-200 hover:shadow-md hover:shadow-black/30 rounded-lg duration-200">
                         <div className="flex items-center">
                             <div className="bg-blue-900 text-white rounded-full p-2 mr-5"><UserIcon /></div>
                             <div className="font-medium pr-3 text-xl">{u.firstname}</div>
@@ -150,11 +159,16 @@ export const Dashboard = () => {
                             <div className="text-lg font-medium pb-2">Amount:</div>
                             <input placeholder="Enter amount"
                                 type="number"
-                                className="border-1 border-gray-400 hover:border-gray-600 duration-300 rounded-lg w-full p-1">
+                                className="border-1 border-gray-400 hover:border-gray-600 duration-300 rounded-lg w-full p-1"
+                                ref={amountRef}>
                             </input>
 
                             <div className="pt-6">
-                                <button className="w-full bg-blue-800 font-semibold text-white rounded-lg p-2 hover:bg-blue-700 duration-300">Initiate transfer</button>
+                                <button
+                                    className="w-full bg-blue-900 font-semibold text-white rounded-lg p-2 hover:bg-blue-800 duration-300"
+                                    onClick={handleTransfer}>
+                                    Initiate transfer
+                                </button>
                             </div>
 
                         </div>
