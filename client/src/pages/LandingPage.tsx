@@ -54,9 +54,9 @@ export const LandingPage = () => {
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl transform rotate-3 opacity-10"></div>
                   <div className="absolute inset-0 flex items-center justify-center">
                     <img
-                      src="/placeholder.svg?height=400&width=300"
+                      src="https://imgs.search.brave.com/RE-KXKZbJPgfZ7lSHKRmP-WO7l3USRDjt6CGfM2GeNI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by90/ZWNobm9sb2d5LWJh/bmtpbmctc3BhY2Ut/aG9sZGluZy1jYXJk/LWJ1c2luZXNzXzE0/MjEtMjU3LmpwZz9z/ZW10PWFpc19oeWJy/aWQmdz03NDA"
                       alt="PayEase Mobile App"
-                      className="h-auto max-w-full rounded-xl shadow-lg"
+                      className="h-auto max-w-full rounded-xl shadow-lg "
                     />
                   </div>
                 </div>
